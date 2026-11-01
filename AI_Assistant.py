@@ -11,6 +11,9 @@ client = OpenAI(
     base_url=os.getenv("BASE_URL"),
     api_key=os.getenv("API_KEY")
 )
+
+messages = []
+
 while True:
     user_input = input("\nYou: ")
 
@@ -18,16 +21,24 @@ while True:
         print("Exiting the chat. Goodbye!")
         break
 
+    messages.append(
+        {
+            "role": "user",
+            "content": user_input
+        }
+    )
     response = client.chat.completions.create(
         # model = "qwen3:4b",
         model = os.getenv("MODEL"),
-        messages = [
-            {
-            "role" : "user",
-            "content" : user_input
-        }
-    ]
+        messages = messages
 )
+    assistant_reply = response.choices[0].message.content
+    messages.append(
+            {
+                "role": "assistant",
+                "content": assistant_reply
+            }
+        )
 
 # print(response)
 # print("LLM Response:")
@@ -35,4 +46,4 @@ while True:
 
 #ollama gives json -> python Object (chat completion)
 
-print("Assistant: " + response.choices[0].message.content) #response from LLM Model : qwen3:4b
+print("Assistant: " + assistant_reply) #response from LLM Model : qwen3:4b
