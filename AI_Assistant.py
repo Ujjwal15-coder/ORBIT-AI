@@ -2,6 +2,7 @@ from openai import OpenAI
 from dotenv import load_dotenv
 import os
 
+
 load_dotenv() # Load environment variables from .env file
 
 client = OpenAI(
@@ -13,6 +14,13 @@ client = OpenAI(
 )
 
 messages = []
+
+messages.append(
+    {
+        "role":"system",
+        "content":"Act as a lawyer and respond in only 30 words"
+    }
+)
 
 while True:
     user_input = input("\nYou: ")
@@ -31,6 +39,7 @@ while True:
         # model = "qwen3:4b",
         model = os.getenv("MODEL"),
         messages = messages
+        
 )
     assistant_reply = response.choices[0].message.content
     messages.append(
@@ -46,4 +55,4 @@ while True:
 
 #ollama gives json -> python Object (chat completion)
 
-print("Assistant: " + assistant_reply) #response from LLM Model : qwen3:4b
+    print("Assistant: " + assistant_reply) #response from LLM Model : qwen3:4b
